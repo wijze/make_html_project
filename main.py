@@ -3,6 +3,7 @@ import os
 
 def main():
     print("starting")
+    global project_name
     project_name = input("project name: ")
 
     global working_directory_path
@@ -18,12 +19,19 @@ def main():
     while running:
         page_name = input("page name, q to quit:")
         if(page_name=="q"): break
+        make_page(page_name)
     
     print("done")
 
 
 def make_page(name):
-    page_path = os.path.join(get_project_folder_path(), name)
+    page_path = os.path.join(get_project_folder_path(), "resources", name)
+    os.mkdir(page_path)
+    print(page_path)
+    generate_file_in_folder_with_text(page_path, name+".html",
+            get_text_from_file("page.html.txt").format(title=project_name,name=name))
+    generate_file_in_folder(page_path, name+".css")
+    generate_file_in_folder(page_path, name+".js")
 
 
 
@@ -36,7 +44,7 @@ def generate_file_with_path(path):
     open(path, "w").close()
 
 
-def generate_file_with_path_and_name(path, name):
+def generate_file_in_folder(path, name):
     open(os.path.join(path, name), "w").close()
 
 
@@ -49,7 +57,7 @@ def generate_file_with_text_and_path(path, text):
     with open(path, "w") as file:
         file.write(text)
 
-def generate_file_with_text_and_path_and_name(path, name, text):
+def generate_file_in_folder_with_text(path, name, text):
     with open(os.path.join(path, name), "w") as file:
         file.write(text)
 
