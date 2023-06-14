@@ -3,12 +3,19 @@ import os
 
 def main():
     global project_name
-    project_name = input("project name: ")
 
     global working_directory_path
     working_directory_path = os.getcwd()
     global project_folder_path
-    project_folder_path = os.path.join(working_directory_path, project_name)
+
+    no_valid_name = True
+    while no_valid_name:
+        project_name = input("project name: ")
+        project_folder_path = os.path.join(working_directory_path, project_name)
+        if(not os.path.exists(project_folder_path)):
+            no_valid_name = False
+        else: print("warning, folder with that name already exists")
+
     os.mkdir(project_folder_path)
 
     os.mkdir(os.path.join(get_project_folder_path(), "resources"))
@@ -26,6 +33,9 @@ def main():
     while running:
         page_name = input("page name, q to quit:")
         if(page_name=="q"): break
+        if(page_name in pages):
+            print("warning, page already exists")
+            continue
         pages.append(page_name)
         make_page(page_name)
     
