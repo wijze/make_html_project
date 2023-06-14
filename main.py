@@ -2,7 +2,6 @@ import os
 
 
 def main():
-    print("starting")
     global project_name
     project_name = input("project name: ")
 
@@ -12,8 +11,15 @@ def main():
     project_folder_path = os.path.join(working_directory_path, project_name)
     os.mkdir(project_folder_path)
 
-    
     os.mkdir(os.path.join(get_project_folder_path(), "resources"))
+
+    index_resources_path = os.path.join(project_folder_path, "resources", "index")
+    os.mkdir(index_resources_path)
+    generate_file_in_folder(index_resources_path, "index.css")
+    generate_file_in_folder(index_resources_path, "index.js")
+
+    generate_file_in_folder(os.path.join(project_folder_path, "resources"), "global.css")
+    generate_file_in_folder(os.path.join(project_folder_path, "resources"), "global.js")
 
     running = True
     pages=[]
@@ -39,8 +45,6 @@ def make_page(name):
             get_resource_text("page.html.txt").format(title=project_name,name=name))
     generate_file_in_folder(page_path, name+".css")
     generate_file_in_folder(page_path, name+".js")
-
-
 
 
 def generate_file(name):
