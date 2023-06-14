@@ -12,24 +12,31 @@ def main():
     project_folder_path = os.path.join(working_directory_path, project_name)
     os.mkdir(project_folder_path)
 
-    generate_file_with_text("index.html", get_text_from_file("index.html.txt").format(name=project_name))
+    
     os.mkdir(os.path.join(get_project_folder_path(), "resources"))
 
     running = True
+    pages=[]
     while running:
         page_name = input("page name, q to quit:")
         if(page_name=="q"): break
+        pages.append(page_name)
         make_page(page_name)
     
+    generate_file_with_text("index.html", 
+        get_resource_text("index.html.txt").format(name=project_name, 
+            links = "\n\t".join(["<a href='./resources/{0}/{0}.html'>{0}</a>"
+                .format(name) for name in pages])
+        )
+    )
     print("done")
 
 
 def make_page(name):
     page_path = os.path.join(get_project_folder_path(), "resources", name)
     os.mkdir(page_path)
-    print(page_path)
     generate_file_in_folder_with_text(page_path, name+".html",
-            get_text_from_file("page.html.txt").format(title=project_name,name=name))
+            get_resource_text("page.html.txt").format(title=project_name,name=name))
     generate_file_in_folder(page_path, name+".css")
     generate_file_in_folder(page_path, name+".js")
 
@@ -70,8 +77,12 @@ def get_working_folder_path(name=""):
     return os.path.join(working_directory_path, name)
 
 
-def get_text_from_file(name):
-    return open(get_working_folder_path(name), "r").read()
+def get_resource_text(name):
+    return open(get_relative_file_path(name), "r").read()
+
+
+def get_relative_file_path(name):
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), name)
 
 
 if __name__=="__main__": main()
